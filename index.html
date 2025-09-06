@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Search App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container" class="w-full max-w-2xl p-6 md:p-10 mx-auto bg-gray-800 rounded-3xl shadow-2xl transition-all duration-500">
+    <!-- Login Page -->
+    <div id="login-page" class="text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Welcome</h1>
+        <p class="text-gray-400 mb-8">Please log in to continue.</p>
+
+        <div class="flex flex-col items-center">
+            <input id="username" type="text" placeholder="Username" class="w-full max-w-md px-5 py-3 mb-4 text-gray-800 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+            <input id="password" type="password" placeholder="Password" class="w-full max-w-md px-5 py-3 mb-6 text-gray-800 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+            <button onclick="handleLogin()" class="w-full max-w-xs px-6 py-3 font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-transform duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Log In
+            </button>
+            <div id="message-box" class="mt-4 text-red-400"></div>
+        </div>
+    </div>
+
+    <!-- Search Page -->
+    <div id="search-page" class="hidden text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Search</h1>
+        <p class="text-gray-400 mb-8">Type a search term to find information.</p>
+        
+        <div class="flex flex-col sm:flex-row items-center w-full mb-6">
+            <input id="search-input" type="text" placeholder="e.g., dog, cat, snake" class="flex-grow w-full px-5 py-3 mb-4 sm:mb-0 sm:mr-4 text-gray-800 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+            <button onclick="handleSearch()" class="w-full sm:w-auto px-6 py-3 font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-transform duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Search
+            </button>
+        </div>
+
+        <div id="results-container" class="mt-8 text-left space-y-4">
+            <!-- Search results will be injected here -->
+        </div>
+    </div>
+
+    <!-- 404 Page -->
+    <div id="not-found-page" class="hidden text-center">
+        <h1 class="text-6xl md:text-8xl font-extrabold text-red-500 mb-4">404</h1>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Page Not Found</h2>
+        <p class="text-gray-400 mb-8">The page you were looking for doesn't exist.</p>
+        <button onclick="goBack()" class="px-6 py-3 font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-transform duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Go Back
+        </button>
+    </div>
+</div>
+
+<script>
+    // Get page elements
+    const loginPage = document.getElementById('login-page');
+    const searchPage = document.getElementById('search-page');
+    const notFoundPage = document.getElementById('not-found-page');
+    const searchInput = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('results-container');
+    const messageBox = document.getElementById('message-box');
+
+    /**
+     * Handles the login button click.
+     * This is a simple client-side simulation.
+     */
+    function handleLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // A basic check to simulate a successful login
+        if (username.length > 0 && password.length > 0) {
+            loginPage.classList.add('hidden');
+            searchPage.classList.remove('hidden');
+            messageBox.textContent = '';
+        } else {
+            messageBox.textContent = 'Please enter a username and password.';
+        }
+    }
+
+    /**
+     * Handles the search button click and displays results.
+     */
+    function handleSearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        let resultsHtml = '';
+
+        switch (query) {
+            case 'dog':
+                resultsHtml = `
+                    <div class="p-6 bg-gray-700 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-white mb-2">Dog Information</h3>
+                        <p class="text-gray-300 mb-4">Dogs are domesticated mammals, not a wolf. They are a subspecies of the gray wolf.</p>
+                        <ul class="list-disc list-inside space-y-2 text-blue-400 font-medium">
+                            <li><a href="https://en.wikipedia.org/wiki/Dog" target="_blank" class="hover:underline">Wikipedia page on Dogs</a></li>
+                            <li><a href="https://www.nationalgeographic.com/animals/mammals/facts/domestic-dog" target="_blank" class="hover:underline">National Geographic's Dog Facts</a></li>
+                            <li><a href="https://www.akc.org/dog-breeds/corgi/" target="_blank" class="hover:underline">American Kennel Club - Corgi Info</a></li>
+                        </ul>
+                        <img src="https://thaka.bing.com/th/id/OIP.etNfRrvo9yaJi3Pbj97e8AHaEK?w=270&h=180&c=7&r=0&o=5&dpr=1.8&pid=1.7" alt="A cute dog placeholder image" class="mt-6 w-full h-auto rounded-xl">
+                    </div>
+                `;
+                break;
+            case 'cat':
+                resultsHtml = `
+                    <div class="p-6 bg-gray-700 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-white mb-2">Cat Information</h3>
+                        <p class="text-gray-300 mb-4">The cat is a domesticated species of small carnivorous mammal. It is the only domesticated species in the family Felidae.</p>
+                        <ul class="list-disc list-inside space-y-2 text-blue-400 font-medium">
+                            <li><a href="https://en.wikipedia.org/wiki/Cat" target="_blank" class="hover:underline">Wikipedia page on Cats</a></li>
+                            <li><a href="https://www.nationalgeographic.com/animals/mammals/facts/domestic-cat" target="_blank" class="hover:underline">National Geographic's Cat Facts</a></li>
+                            <li><a href="https://www.catster.com/cat-behavior/" target="_blank" class="hover:underline">Catster - Behavior Facts</a></li>
+                        </ul>
+                        <img src="https://thaka.bing.com/th/id/OIP.rM81T2vECiRhkckDanbD9QHaEo?w=273&h=180&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3" alt="A cute cat placeholder image" class="mt-6 w-full h-auto rounded-xl">
+                    </div>
+                `;
+                break;
+            case 'snake':
+                // For the "snake" query, we'll "redirect" to the 404 page
+                showNotFoundPage();
+                break;
+            default:
+                resultsHtml = `
+                    <div class="p-6 text-center text-gray-400 bg-gray-700 rounded-2xl">
+                        <p>No results found for "${query}". Try searching for "dog", "cat", or "snake".</p>
+                    </div>
+                `;
+                break;
+        }
+
+        if (query !== 'snake') {
+            resultsContainer.innerHTML = resultsHtml;
+        }
+    }
+
+    /**
+     * Hides the search page and shows the 404 page.
+     */
+    function showNotFoundPage() {
+        searchPage.classList.add('hidden');
+        notFoundPage.classList.remove('hidden');
+    }
+
+    /**
+     * Hides the 404 page and shows the search page.
+     */
+    function goBack() {
+        notFoundPage.classList.add('hidden');
+        searchPage.classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
